@@ -13,9 +13,9 @@ PORT = "/dev/ttyS0"
 BAUDRATE = 115200
 
 # Frequencies of MSP requests and Display output
-FAST_HZ = 30   # ATTITUDE MSP Frequency
-SLOW_HZ = 15   # Others MSP Frequency
-OUT_HZ  = 30   # Print Frequency
+FAST_HZ = 30.0   # ATTITUDE MSP Frequency
+SLOW_HZ = 15.0   # Others MSP Frequency
+OUT_HZ  = 30.0   # Print Frequency
 
 FAST_DT = 1.0 / FAST_HZ
 SLOW_DT = 1.0 / SLOW_HZ
@@ -28,6 +28,8 @@ MSP_RAW_GPS    = 106
 MSP_ANALOG     = 110
 MSP_COMP_GPS   = 107
 MSP_CURRENT    = 23
+MSP_RC = 105
+
 
 # ---------------------------- MSP Communication Functions ----------------------------------------
 
@@ -81,7 +83,6 @@ def read_msp_response(ser):
     return cmd, payload
 
 
-
 # ---------------------------------------- MSP Data Parsers ----------------------------------------
 
 def parse_attitude(p):
@@ -108,16 +109,22 @@ def parse_gps(p):
     }
 
 def parse_analog(p):
-    if len(p) < 3:
-        return None, None
-    vbat_raw, current_raw = struct.unpack("<BH", p[:3])
+    if len(p) < 5:
+        return None, None, None
+    vbat_raw, current_raw, rssi_raw = struct.unpack("<BHH", p[:5])
     vbat = vbat_raw / 10.0          # V
     current = current_raw / 100.0   # A
-    return vbat, current
+    rssi = rssi_raw                 # 0 ~ 1023
+    return vbat, current, rssi
 
 def parse_home(p):
     dist, direction = struct.unpack("<Hh", p[:4])
     return dist, direction
+
+def parse_rc(p):
+    if len(p) < 32:
+        return None
+    return struct.unpack("<16H", p[:32])
 
 
 # ---------------------------------------- Main ----------------------------------------
@@ -128,6 +135,7 @@ data = {
         "lat": None, "lon": None,
         "speed": None, "sats": None, "course": None,
         "vbat": None, "current": None,
+        "rssi": None, "throttle": None,
         "home_dist": None, "home_dir": None,
         "speed_3d": None
     }
@@ -155,6 +163,7 @@ def main():
             send_msp_request(ser, MSP_ANALOG)
             send_msp_request(ser, MSP_CURRENT)
             send_msp_request(ser, MSP_COMP_GPS)
+            send_msp_request(ser, MSP_RC)
             t_slow = now
 
         # Read Responses
@@ -183,11 +192,17 @@ def main():
 
             elif cmd == MSP_ANALOG:
                 with data_lock:
-                    data["vbat"], data["current"] = parse_analog(p)
+                    data["vbat"], data["current"], data["rssi"] = parse_analog(p)
 
             elif cmd == MSP_COMP_GPS:
                 with data_lock:
                     data["home_dist"], data["home_dir"] = parse_home(p)
+
+            elif cmd == MSP_RC:
+                rc = parse_rc(p)
+                if rc:
+                    with data_lock:
+                        data["throttle"] = rc[2]  # CH3 = Throttle / 1000 ~ 2000
 
         # Data Output
         if now - t_out >= OUT_DT:
@@ -217,6 +232,8 @@ def main():
                 f"COURSE:{data['course']}° | "
                 f"VBAT:{data['vbat']} V  "
                 f"CURRENT:{data['current']} A | "
+                f"RSSI:{data['rssi']} | "
+                f"THR:{data['throttle']} | "
                 f"HOME:{data['home_dist']} m  "
                 f"{data['home_dir']}°"
             )

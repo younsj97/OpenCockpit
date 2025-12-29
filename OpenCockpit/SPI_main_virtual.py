@@ -14,6 +14,7 @@ import HUD_pi_114
 import HUD_pi_085
 import MFD_pi_096
 import MAP_pi_096
+import INFO_pi_096
 
 import adafruit_rgb_display.st7735 as ST7735
 import adafruit_rgb_display.st7789 as ST7789
@@ -35,7 +36,7 @@ SELECTED_DISPLAYS = {
     "Display_1": "HUD_1.14",
     "Display_2": "MAP_0.96",
     "Display_3": "MFD_0.96",
-    "Display_4": "HUD_0.85",
+    "Display_4": "INFO_0.96",
 }
 # ==========================================================
 
@@ -53,7 +54,8 @@ MODULE_MAP = {
     "HUD_1.14": HUD_pi_114,
     "HUD_0.85": HUD_pi_085,
     "MFD_0.96": MFD_pi_096,
-    "MAP_0.96": MAP_pi_096
+    "MAP_0.96": MAP_pi_096,
+    "INFO_0.96" : INFO_pi_096
 }
 
 # Set framerate config
@@ -137,11 +139,13 @@ def virtual_MSP_data():
     speed_3d = 110 + math.sin(dt * 1 + 1) * -20
     sats = 10 + int((math.sin(dt * 0.2) + 1) * 5)
     course = 45 + (int(math.sin(dt * 0.2) * 180 % 360))
-    vbat = 15.8 + (math.sin(dt * 1) * 1)
-    current = 12.5 + math.sin(dt * 1) * -5
+    vbat = 15.4 + (math.sin(dt * 1) * -0.5)
+    current = 35.4 + math.sin(dt * 1) * 15
+    rssi = 600 + math.sin(dt * 2) * 50
+    throttle = 1700 + math.sin(dt * 1) * 200
     home_dist = 512 + int(math.sin(dt * 1) * 5)
     home_dir = 45 + (int(dt * 10) % 360)
-    return pitch, roll, yaw, v_speed, alt, lat, lon, speed_3d, sats, course, vbat, current, home_dist, home_dir
+    return pitch, roll, yaw, v_speed, alt, lat, lon, speed_3d, sats, course, vbat, current, rssi, throttle, home_dist, home_dir
 
 # Thread target: render and draw display loop for each module
 def display_loop(module, disp, width, height, fps=HIGH_FPS):
@@ -156,13 +160,15 @@ def display_loop(module, disp, width, height, fps=HIGH_FPS):
     # Render fixed components
     if hasattr(module, "render_mfd_fixed"):
         module.render_mfd_fixed()
+    if hasattr(module, "render_info_fixed"):
+        module.render_info_fixed()
 
     # Render dynamic components
     while True:
         clock.tick(fps)
 
         # get virtual data for testing
-        pitch, roll, yaw, v_speed, alt, lat, lon, speed_3d, sats, course, vbat, current, home_dist, home_dir = virtual_MSP_data()
+        pitch, roll, yaw, v_speed, alt, lat, lon, speed_3d, sats, course, vbat, current, rssi, throttle, home_dist, home_dir = virtual_MSP_data()
 
         # Call module-render functions by name
         if hasattr(module, "render_hud"):
@@ -171,12 +177,14 @@ def display_loop(module, disp, width, height, fps=HIGH_FPS):
             module.render_mfd_dynamic(pitch, roll, yaw, v_speed, alt, speed_3d, sats, course, vbat, current, home_dist, home_dir)
         elif hasattr(module, "render_map"):
             module.render_map(yaw, v_speed, alt, lat, lon, speed_3d, sats, course, vbat, current, home_dist, home_dir)
+        elif hasattr(module, "render_info_dynamic"):
+            module.render_info_dynamic(vbat, current, rssi, throttle)
 
         if module == HUD_pi_114 or module == HUD_pi_085:    # Flip screen vertically (enable with reflect screen) 
             #flipped = flip_surface_vertical(module.screen)
             #raw = pygame.image.tostring(flipped, "RGB")
             pass
-        elif module == MFD_pi_096:  # Set surface order and send to display
+        elif module == MFD_pi_096 or module == INFO_pi_096:  # Set surface order and send to display
             module.screen.blit(module.background_surface, (0,0))    # bottom surface
             module.screen.blit(module.dynamic_surface, (0,0))
             module.screen.blit(module.fixed_surface, (0,0))         # top surface
@@ -190,9 +198,6 @@ def display_loop(module, disp, width, height, fps=HIGH_FPS):
 
 # Run
 def main():
-
-    pygame.init()
-    threads = []
 
     pygame.init()
     Display_thread_lists = []

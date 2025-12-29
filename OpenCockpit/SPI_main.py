@@ -13,6 +13,7 @@ import HUD_pi_114
 import HUD_pi_085
 import MFD_pi_096
 import MAP_pi_096
+import INFO_pi_096
 
 import adafruit_rgb_display.st7735 as ST7735
 import adafruit_rgb_display.st7789 as ST7789
@@ -34,7 +35,7 @@ SELECTED_DISPLAYS = {
     "Display_1": "HUD_1.14",
     "Display_2": "MAP_0.96",
     "Display_3": "MFD_0.96",
-    "Display_4": "HUD_0.85",
+    "Display_4": "INFO_0.96",
 }
 # ==========================================================
 
@@ -52,7 +53,8 @@ MODULE_MAP = {
     "HUD_1.14": HUD_pi_114,
     "HUD_0.85": HUD_pi_085,
     "MFD_0.96": MFD_pi_096,
-    "MAP_0.96": MAP_pi_096
+    "MAP_0.96": MAP_pi_096,
+    "INFO_0.96" : INFO_pi_096
 }
 
 # Set framerate config
@@ -135,6 +137,8 @@ def display_loop(module, disp, width, height, fps):
     # Render fixed components
     if hasattr(module, "render_mfd_fixed"):
         module.render_mfd_fixed()
+    if hasattr(module, "render_info_fixed"):
+        module.render_info_fixed()
 
     # Render dynamic components
     while True:
@@ -155,6 +159,8 @@ def display_loop(module, disp, width, height, fps):
         course = snap["course"] if snap["course"] is not None else 0
         vbat = snap["vbat"] if snap["vbat"] is not None else 0.0
         current = snap["current"] if snap["current"] is not None else 0.0
+        rssi = snap["rssi"] if snap["rssi"] is not None else 0.0
+        throttle = snap["throttle"] if snap["throttle"] is not None else 0.0
         home_dist = snap["home_dist"] if snap["home_dist"] is not None else 0
         home_dir = snap["home_dir"] if snap["home_dir"] is not None else 0
 
@@ -165,12 +171,14 @@ def display_loop(module, disp, width, height, fps):
             module.render_mfd_dynamic(pitch, roll, yaw, v_speed, alt, speed_3d, sats, course, vbat, current, home_dist, home_dir)
         elif hasattr(module, "render_map"):
             module.render_map(yaw, v_speed, alt, lat, lon, speed_3d, sats, course, vbat, current, home_dist, home_dir)
+        elif hasattr(module, "render_info_dynamic"):
+            module.render_info_dynamic(vbat, current, rssi, throttle)
 
         if module == HUD_pi_114 or module == HUD_pi_085:    # Flip screen vertically (enable with reflect screen) 
             #flipped = flip_surface_vertical(module.screen)
             #raw = pygame.image.tostring(flipped, "RGB")
             pass
-        elif module == MFD_pi_096:  # Set surface order and send to display
+        elif module == MFD_pi_096 or module == INFO_pi_096:  # Set surface order and send to display
             module.screen.blit(module.background_surface, (0,0))    # bottom surface
             module.screen.blit(module.dynamic_surface, (0,0))
             module.screen.blit(module.fixed_surface, (0,0))         # top surface
