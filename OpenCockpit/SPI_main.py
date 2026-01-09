@@ -32,7 +32,7 @@ import adafruit_rgb_display.st7789 as ST7789
 # } 
 # ==========================================================
 SELECTED_DISPLAYS = {
-    "Display_1": "HUD_1.14",
+    "Display_1": "HUD_0.85",
     "Display_2": "MAP_0.96",
     "Display_3": "MFD_0.96",
     "Display_4": "INFO_0.96",
@@ -64,6 +64,27 @@ LOW_FPS = 15
 # Init SPI bus
 spi = busio.SPI(board.SCK, MOSI=board.MOSI)
 
+PIN_OBJECTS = {}
+
+for disp_id, pins in DISPLAY_HARDWARE_MAP.items():
+    cs  = digitalio.DigitalInOut(pins["cs"])
+    dc  = digitalio.DigitalInOut(pins["dc"])
+    rst = digitalio.DigitalInOut(pins["rst"])
+
+    cs.direction  = digitalio.Direction.OUTPUT
+    dc.direction  = digitalio.Direction.OUTPUT
+    rst.direction = digitalio.Direction.OUTPUT
+
+    cs.value  = True   # deselect
+    dc.value  = False  # default
+    rst.value = True   # keep reset released
+
+    PIN_OBJECTS[disp_id] = {
+        "cs": cs,
+        "dc": dc,
+        "rst": rst
+    }
+
 # Map of driver name to constructor
 DRIVER_MAP = {
     "ST7735": ST7735.ST7735R,
@@ -74,7 +95,6 @@ DRIVER_MAP = {
 # based on the ID and module object received from SELECTED_DISPLAYS.
 def init_display(display_id, module_obj):
 
-    hw_cfg = DISPLAY_HARDWARE_MAP[display_id]
     mod_cfg = module_obj.DISPLAY_CONFIG
 
     driver_name = mod_cfg.get("driver")
@@ -84,9 +104,16 @@ def init_display(display_id, module_obj):
         raise RuntimeError(f"Unsupported driver: {driver_name}")
 
     # Set SPI pins (based on DISPLAY_HARDWARE_MAP)
-    cs = digitalio.DigitalInOut(hw_cfg["cs"])
-    dc = digitalio.DigitalInOut(hw_cfg["dc"])
-    rst = digitalio.DigitalInOut(hw_cfg["rst"])
+    pins = PIN_OBJECTS[display_id]
+    cs  = pins["cs"]
+    dc  = pins["dc"]
+    rst = pins["rst"]
+
+    # force rst reset
+    rst.value = False
+    time.sleep(0.05)
+    rst.value = True
+    time.sleep(0.05)
 
     # Make display configs dictionary
     display_kwargs = {
@@ -99,7 +126,7 @@ def init_display(display_id, module_obj):
         "rotation": mod_cfg.get("rotation"),
         "x_offset": mod_cfg.get("x_offset"),
         "y_offset": mod_cfg.get("y_offset"),
-        "baudrate": mod_cfg.get("baudrate")
+        "baudrate": 52000000
     }
 
     # Add invert factor when driver is ST7735
@@ -199,15 +226,6 @@ def main():
     pygame.init()
     Display_thread_lists = []
 
-    # Set all CS pins to HIGH (Prevent bus collisions)
-    print("--- Deactivating all CS pins ---")
-    unused_cs_pins = []
-    for disp_id, pins in DISPLAY_HARDWARE_MAP.items():
-        cs_pin = digitalio.DigitalInOut(pins["cs"])
-        cs_pin.direction = digitalio.Direction.OUTPUT
-        cs_pin.value = True  # set HIGH
-        unused_cs_pins.append(cs_pin)
-
     print("--- Display Initialization Start ---")
 
     # Get displays and modules from SELECTED_DISPLAYS and start loop threads
@@ -226,6 +244,7 @@ def main():
         # Initialize display
         try:
             disp_hw = init_display(disp_id, module_obj)
+            time.sleep(0.2)
             width = module_obj.DISPLAY_CONFIG["width"]
             height = module_obj.DISPLAY_CONFIG["height"]
 

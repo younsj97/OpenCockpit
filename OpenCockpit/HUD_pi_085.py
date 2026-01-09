@@ -499,9 +499,9 @@ if __name__ == "__main__":
     # Init 7735 SPI Display
     spi = busio.SPI(board.SCK, MOSI=board.MOSI)
 
-    cs_7735  = digitalio.DigitalInOut(board.D19)
-    dc_7735  = digitalio.DigitalInOut(board.D26)
-    rst_7735 = digitalio.DigitalInOut(board.D16)
+    cs_7735  = digitalio.DigitalInOut(board.D5)
+    dc_7735  = digitalio.DigitalInOut(board.D25)
+    rst_7735 = digitalio.DigitalInOut(board.D22)
 
     disp_7735 = ST7735.ST7735R(
         spi,
