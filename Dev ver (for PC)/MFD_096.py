@@ -45,10 +45,10 @@ mask_surface = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
 mask_surface.fill(BLACK)
 
 # Load fonts
-font = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/ViperDisplay-Bold.ttf", 8)
-font_mid = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/ViperDisplay-Bold.ttf", 6)
-font_small = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/ViperDisplay-Bold.ttf", 5)
-font_tiny = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/ViperDisplay-Bold.ttf", 3)
+font = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/SW/ViperDisplay-Bold.ttf", 8)
+font_mid = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/SW/ViperDisplay-Bold.ttf", 6)
+font_small = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/SW/ViperDisplay-Bold.ttf", 5)
+font_tiny = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/SW/ViperDisplay-Bold.ttf", 3)
 
 
 # ---------------------------- FC data Variables (for testing) ----------------------------------------
@@ -309,7 +309,7 @@ def draw_speed_gauge_fixed(surface, max_speed):
         angle_deg = start_angle_deg_speed + t * (end_angle_deg_speed - start_angle_deg_speed)
         rad = math.radians(angle_deg)
 
-        # positions on arc
+        # tick positions on arc
         arc_x = cx_speed + math.cos(rad) * r_speed
         arc_y = cy_speed + math.sin(rad) * r_speed
 

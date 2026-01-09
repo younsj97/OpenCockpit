@@ -28,16 +28,16 @@ screen.fill(BLACK)
 clock = pygame.time.Clock()
 
 # Load fonts
-font = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/ViperDisplay-Bold.ttf", 8)
-font_mid = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/ViperDisplay-Bold.ttf", 6)
-font_small = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/ViperDisplay-Bold.ttf", 5)
-font_tiny = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/ViperDisplay-Bold.ttf", 3)
+font = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/SW/ViperDisplay-Bold.ttf", 8)
+font_mid = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/SW/ViperDisplay-Bold.ttf", 6)
+font_small = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/SW/ViperDisplay-Bold.ttf", 5)
+font_tiny = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/SW/ViperDisplay-Bold.ttf", 3)
 
 
 # ---------------------------- Map Configuration ----------------------------------------
 
 # MAP Configuration
-MAP_PATH = "C:/Users/dbstj/Desktop/Project/5. OpenCockpit/map.png"
+MAP_PATH = "C:/Users/dbstj/Desktop/Project/5. OpenCockpit/SW/map.png"
 MAP_LAT_TOP, MAP_LON_LEFT     = 36.5667, 127.1867
 MAP_LAT_BOTTOM, MAP_LON_RIGHT = 36.3263, 127.6326
 

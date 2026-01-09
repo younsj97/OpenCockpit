@@ -29,9 +29,9 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
 # Load fonts
-font = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/ViperDisplay-Bold.ttf", 8)
-font_mid = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/ViperDisplay-Bold.ttf", 6)
-font_small = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/ViperDisplay-Bold.ttf", 5)
+font = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/SW/ViperDisplay-Bold.ttf", 8)
+font_mid = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/SW/ViperDisplay-Bold.ttf", 6)
+font_small = pygame.font.Font("C:/Users/dbstj/Desktop/Project/5. OpenCockpit/SW/ViperDisplay-Bold.ttf", 5)
 
 
 # ---------------------------- FC data Variables (for testing) ----------------------------------------
