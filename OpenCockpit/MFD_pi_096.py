@@ -11,7 +11,7 @@ import numpy as np
 import adafruit_rgb_display.st7735 as ST7735
 
 
-# Display hardware configuration (used by SPI_out_main to initialize)
+# Display hardware configuration (used by main.py to initialize)
 DISPLAY_CONFIG = {
     "driver": "ST7735",
     "width": 80,
@@ -19,7 +19,6 @@ DISPLAY_CONFIG = {
     "rotation": 0,
     "x_offset": 24,
     "y_offset": 0,
-    "baudrate": 60000000,
     "invert": False
 }
 

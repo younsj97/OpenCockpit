@@ -11,15 +11,14 @@ import numpy as np
 import adafruit_rgb_display.st7789 as ST7789
 
 
-# Display hardware configuration (used by SPI_out_main to initialize)
+# Display hardware configuration (used by main.py to initialize)
 DISPLAY_CONFIG = {
     "driver": "ST7789",
     "width": 135,
     "height": 240,
     "rotation": 0,
     "x_offset": 53,
-    "y_offset": 40,
-    "baudrate": 60000000
+    "y_offset": 40
 }
 
 

@@ -11,7 +11,7 @@ import numpy as np
 import adafruit_rgb_display.st7735 as ST7735
 
 
-# Display hardware configuration (used by SPI_out_main to initialize)
+# Display hardware configuration (used by main.py to initialize)
 DISPLAY_CONFIG = {
     "driver": "ST7735",
     "width": 80,
@@ -19,7 +19,6 @@ DISPLAY_CONFIG = {
     "rotation": 0,
     "x_offset": 24,
     "y_offset": 0,
-    "baudrate": 60000000,
     "invert": False
 }
 
@@ -66,7 +65,7 @@ MAP_LAT_BOTTOM, MAP_LON_RIGHT = 36.3263, 127.6326
 After you capture map image from online map service,
 note down the latitude and longitude of top-left and bottom-right corners
 
-When you capture map image, more than 40 pixels per 1 kilometers is recommended resolution
+When you capture map image, less than 40 pixels per 1 kilometer is recommended resolution (capture large area)
 
  (MAP_LAT_TOP,MAP_LON_LEFT) @ --------------
                             |              |
