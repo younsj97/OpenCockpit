@@ -23,12 +23,17 @@ _To use 32GB or another microSD, make new OpenCockpit from basic Raspberry Pi OS
 
 ---
 
+## Set INAV port
+![pic1](./etc/INAV_ports_setup.png)
+
+After install INAV on FC, set UART1 as MSP 115200 in ports tab, and connect uart1 to FC connector on main PCB
+
+---
+
 ## Build hardwares
 comming soon
 
 ---
 
-## Set INAV port
-![pic1](./etc/INAV_ports_setup.png)
-
-After install INAV on FC, set UART1 as MSP 115200 in ports tab, and connect uart1 to FC connector on main PCB
+## Customize softwares
+comming soon
