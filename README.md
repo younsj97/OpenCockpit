@@ -7,7 +7,7 @@ Full description will be created after the project is completed
 
 ---
 
-## Installation
+## Install Raspberry Pi OS
 ### Option 1  : Install preset OS
 _Installable on 16GB microSD_
  1. Download and install [Raspberry Pi imager](https://www.raspberrypi.com/software/).
@@ -23,12 +23,12 @@ _To use 32GB or another microSD, make new OpenCockpit from basic Raspberry Pi OS
 
 ---
 
-## Build hardware
+## Build hardwares
 comming soon
 
 ---
 
-## INAV Setting
+## Set INAV port
 ![pic1](./etc/INAV_ports_setup.png)
 
 After install INAV on FC, set UART1 as MSP 115200 in ports tab, and connect uart1 to FC connector on main PCB
