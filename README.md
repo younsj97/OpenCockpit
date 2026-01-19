@@ -1,6 +1,8 @@
 # OpenCockpit
 FPV cockpit display with Raspberry Pi
 
+![pic0](./etc/Prototype2.jpg)
+
 Full description will be created after the project is completed
 
 ---
@@ -21,5 +23,6 @@ _To use 32GB or another microSD, make new OpenCockpit from basic Raspberry Pi OS
 
 ---
 
-## FC Setting
-comming soon
+## INAV Setting
+![pic1](./etc/INAV_ports.png)
+Set UART1 as MSP 115200 in INAV, and connect uart1 to Raspberry Pi
