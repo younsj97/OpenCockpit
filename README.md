@@ -23,6 +23,11 @@ _To use 32GB or another microSD, make new OpenCockpit from basic Raspberry Pi OS
 
 ---
 
+## Build hardware
+comming soon
+
+---
+
 ## INAV Setting
 ![pic1](./etc/INAV_ports_setup.png)
 
