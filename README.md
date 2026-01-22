@@ -35,5 +35,7 @@ comming soon
 
 ---
 
-## Customize softwares
-comming soon
+## Modify softwares
+Follow guide
+    - [English](https://vudev.notion.site/OpenCockpit-software-modification-English-2f06ea6262ea8026906fce5b30fe7526?source=copy_link).
+    - [한국어](https://vudev.notion.site/OpenCockpit-2f06ea6262ea80a4a526f1b6e6c0bddc?source=copy_link).
