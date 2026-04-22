@@ -1,6 +1,7 @@
 # OpenCockpit
 FPV cockpit display with Raspberry Pi
 
+![pic0](./etc/PC-21_cockpit.jpg)
 ![pic0](./etc/Prototype2.jpg)
 
 Full description will be created after the project is completed
