@@ -57,8 +57,8 @@ font_tiny = pygame.font.Font("/boot/firmware/OpenCockpit/ViperDisplay-Bold.ttf",
 
 # MAP Configuration
 MAP_PATH = "/boot/firmware/OpenCockpit/map.png"
-MAP_LAT_TOP, MAP_LON_LEFT     = 36.5667, 127.1867
-MAP_LAT_BOTTOM, MAP_LON_RIGHT = 36.3263, 127.6326
+MAP_LAT_TOP, MAP_LON_LEFT     = 36.62586, 127.12019
+MAP_LAT_BOTTOM, MAP_LON_RIGHT = 36.30558, 127.76007
 
 '''      Map configuration diagram
 
@@ -77,10 +77,6 @@ When you capture map image, less than 40 pixels per 1 kilometer is recommended r
                             ---------------@ (MAP_LAT_BOTTOM,MAP_LON_RIGHT)
 '''
 
-
-# MAP Rotation control
-ROTATE_HZ = 15.0
-ROTATE_DT = 1.0 / ROTATE_HZ
 
 # Overscan size (map rotation diagonal safe)
 OVERSCAN = int(math.sqrt(WIDTH**2 + HEIGHT**2)) + 1
@@ -114,20 +110,26 @@ def position_to_pixel(lat, lon, img_w, img_h):
 map_img = pygame.image.load(MAP_PATH).convert()
 MAP_W, MAP_H = map_img.get_size()
 
-last_rotate_time = 0.0
-rotated_cache = None
+updated_cache = None
 last_heading = None
+has_good_gps = False
 
 # Draw MAP and rotate function
-def draw_MAP(lat, lon, yaw, sats, course, speed_3d):
+def draw_MAP(lat, lon, yaw, sats, course):
 
-    global last_rotate_time, rotated_cache, last_heading
+    global updated_cache, last_heading, has_good_gps
 
     # ---------------- Heading selection ----------------
-    if sats > 3 and speed_3d > 1.5:
+    if sats >= 6:
+        has_good_gps = True
+
+    if has_good_gps:
         heading = course
     else:
         heading = yaw
+
+    if heading is None:
+        heading = last_heading
 
     # Set heading step
     HEADING_STEP = 1.0
@@ -159,24 +161,16 @@ def draw_MAP(lat, lon, yaw, sats, course, speed_3d):
             area=(src_x, src_y, src_w, src_h)
         )
 
-    # ---------------- Rotate (ROTATE_HZ applied) ----------------
-    now = time.time()
-    time_ok = (now - last_rotate_time) >= ROTATE_DT
+    updated_cache = pygame.transform.rotate(overscan_surf, heading)
 
-    if rotated_cache is None or time_ok:
-        rotated_cache = pygame.transform.rotate(overscan_surf, heading)
-        last_rotate_time = now
+    last_heading = heading
 
     # ---------------- Final crop ----------------
-    rw, rh = rotated_cache.get_size()
+    rw, rh = updated_cache.get_size()
     fx = (rw - WIDTH) // 2
     fy = (rh - HEIGHT) // 2
 
-    screen.blit(
-        rotated_cache,
-        (0, 0),
-        area=(fx, fy, WIDTH, HEIGHT)
-    )
+    screen.blit(updated_cache, (0, 0), area=(fx, fy, WIDTH, HEIGHT))
 
 # Draw crosshair function
 def draw_crosshair(surface):
@@ -201,7 +195,7 @@ def draw_text(text, x, y, align="left", font=font, color=BLACK):
 def render_map(yaw, v_speed, alt, lat, lon, speed_3d, sats, course, vbat, current, home_dist, home_dir):
 
     # Map rendering logic here
-    draw_MAP(lat, lon, yaw, sats, course, speed_3d)
+    draw_MAP(lat, lon, yaw, sats, course)
 
     # Draw crosshair
     draw_crosshair(screen)

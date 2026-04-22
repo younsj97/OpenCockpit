@@ -160,11 +160,11 @@ def virtual_MSP_data():
     yaw = 45 + math.sin(dt * 0.2) * 180
     v_speed = math.sin(dt * 0.7) * 3
     alt = 250 + math.sin(dt * 1 + 1) * 30
-    lon = 127.40603 + math.sin(dt * 0.4) * 0.003
-    lat = 36.45325 + math.sin(dt * 0.4) * 0.003
+    lon = 127.40603 + math.sin(dt * 0.4 + 1) * 0.01
+    lat = 36.45325 + math.sin(dt * 0.4) * 0.01
     speed_3d = 110 + math.sin(dt * 1 + 1) * -20
     sats = 10 + int((math.sin(dt * 0.2) + 1) * 5)
-    course = 45 + (int(math.sin(dt * 0.2) * 180 % 360))
+    course = - (int(dt * 23 + 10) % 360)
     vbat = 15.4 + (math.sin(dt * 1) * -0.5)
     current = 35.4 + math.sin(dt * 1) * 15
     rssi = 600 + math.sin(dt * 2) * 50
@@ -196,7 +196,7 @@ def display_loop(module, disp, width, height, fps=HIGH_FPS):
         # get virtual data for testing
         pitch, roll, yaw, v_speed, alt, lat, lon, speed_3d, sats, course, vbat, current, rssi, throttle, home_dist, home_dir = virtual_MSP_data()
 
-        # Call module-render functions by name
+        # Call rendering function by module
         if hasattr(module, "render_hud"):
             module.render_hud(pitch, roll, yaw, v_speed, alt, speed_3d, sats, course, vbat, current, home_dist, home_dir)
         elif hasattr(module, "render_mfd_dynamic"):
@@ -206,17 +206,18 @@ def display_loop(module, disp, width, height, fps=HIGH_FPS):
         elif hasattr(module, "render_info_dynamic"):
             module.render_info_dynamic(vbat, current, rssi, throttle)
 
-        if module == HUD_pi_114 or module == HUD_pi_085:    # Flip screen vertically (enable with reflect screen) 
-            #flipped = flip_surface_vertical(module.screen)
-            #raw = pygame.image.tostring(flipped, "RGB")
-            pass
+        if module == HUD_pi_114 or module == HUD_pi_085:    # Flip screen horizontally (reflect screen)
+            display_surface = pygame.transform.flip(module.screen, True, False)
         elif module == MFD_pi_096 or module == INFO_pi_096:  # Set surface order and send to display
             module.screen.blit(module.background_surface, (0,0))    # bottom surface
             module.screen.blit(module.dynamic_surface, (0,0))
             module.screen.blit(module.fixed_surface, (0,0))         # top surface
+            display_surface = module.screen
+        else:
+            display_surface = module.screen
 
         # Get pygame surface data
-        raw = pygame.image.tostring(module.screen, "RGB")
+        raw = pygame.image.tostring(display_surface, "RGB")
         # Convert RGB888 to RGB565
         buf = rgb888_to_rgb565(raw, width, height)
         # Display update (block write)

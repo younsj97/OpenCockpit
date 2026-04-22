@@ -201,17 +201,18 @@ def display_loop(module, disp, width, height, fps):
         elif hasattr(module, "render_info_dynamic"):
             module.render_info_dynamic(vbat, current, rssi, throttle)
 
-        if module == HUD_pi_114 or module == HUD_pi_085:    # Flip screen vertically (enable with reflect screen) 
-            #flipped = flip_surface_vertical(module.screen)
-            #raw = pygame.image.tostring(flipped, "RGB")
-            pass
+        if module == HUD_pi_114 or module == HUD_pi_085:    # Flip screen horizontally (reflect screen)
+            display_surface = pygame.transform.flip(module.screen, True, False)
         elif module == MFD_pi_096 or module == INFO_pi_096:  # Set surface order and send to display
             module.screen.blit(module.background_surface, (0,0))    # bottom surface
             module.screen.blit(module.dynamic_surface, (0,0))
             module.screen.blit(module.fixed_surface, (0,0))         # top surface
+            display_surface = module.screen
+        else:
+            display_surface = module.screen
 
         # Get pygame surface data
-        raw = pygame.image.tostring(module.screen, "RGB")
+        raw = pygame.image.tostring(display_surface, "RGB")
         # Convert RGB888 to RGB565
         buf = rgb888_to_rgb565(raw, width, height)
         # Display update (block write)
