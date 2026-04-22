@@ -202,7 +202,7 @@ def main():
                 rc = parse_rc(p)
                 if rc:
                     with data_lock:
-                        data["throttle"] = rc[2]  # CH3 = Throttle / 1000 ~ 2000
+                        data["throttle"] = rc[3]  # CH4 = Throttle / 1000 ~ 2000
 
         # Data Output
         if now - t_out >= OUT_DT:
