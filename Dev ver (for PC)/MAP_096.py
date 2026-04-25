@@ -94,17 +94,44 @@ updated_cache = None
 last_heading = None
 has_good_gps = False
 
-# Draw MAP and rotate function
+# ---------------------------- Heading Calculation Variables ----------------------------
+last_lat = None
+last_lon = None
+current_calculated_heading = 0.0
+
+# Set movement threshhold
+MOVE_THRESHOLD = 0.00001
+
+# Heading angle calculation function
+def calculate_bearing(lat1, lon1, lat2, lon2):
+
+    d_lon = lon2 - lon1
+    d_lat = lat2 - lat1
+    
+    angle = math.degrees(math.atan2(d_lon, d_lat))
+    return (angle + 360) % 360
+
+# ---------------------------- Draw MAP and rotate function ----------------------------
 def draw_MAP(lat, lon, yaw, sats, course):
+    global updated_cache, last_heading, has_good_gps, last_lat, last_lon, current_calculated_heading
 
-    global updated_cache, last_heading, has_good_gps
+    # Calculate heading from GPS movement
+    if last_lat is not None and last_lon is not None:
 
-    # ---------------- Heading selection ----------------
+        dist = math.sqrt((lat - last_lat)**2 + (lon - last_lon)**2)
+        
+        if dist > MOVE_THRESHOLD:
+            current_calculated_heading = calculate_bearing(last_lat, last_lon, lat, lon)
+
+    # Update last position
+    last_lat, last_lon = lat, lon
+
+    # Heading data source selection
     if sats >= 6:
         has_good_gps = True
 
     if has_good_gps:
-        heading = course
+        heading = current_calculated_heading
     else:
         heading = yaw
 
@@ -115,41 +142,32 @@ def draw_MAP(lat, lon, yaw, sats, course):
     HEADING_STEP = 1.0
     heading = round(heading / HEADING_STEP) * HEADING_STEP
 
-    # ---------------- GPS → map pixel ----------------
+    # GPS → map pixel
     px, py = position_to_pixel(lat, lon, MAP_W, MAP_H)
 
-    # ---------------- Overscan crop ----------------
+    # Overscan crop
     crop_x = int(px - OVERSCAN // 2)
     crop_y = int(py - OVERSCAN // 2)
 
     overscan_surf = pygame.Surface((OVERSCAN, OVERSCAN))
     overscan_surf.fill(BLACK)
 
-    src_x = max(0, crop_x)
-    src_y = max(0, crop_y)
-
-    dst_x = max(0, -crop_x)
-    dst_y = max(0, -crop_y)
-
+    src_x, src_y = max(0, crop_x), max(0, crop_y)
+    dst_x, dst_y = max(0, -crop_x), max(0, -crop_y)
     src_w = min(MAP_W - src_x, OVERSCAN - dst_x)
     src_h = min(MAP_H - src_y, OVERSCAN - dst_y)
 
     if src_w > 0 and src_h > 0:
-        overscan_surf.blit(
-            map_img,
-            (dst_x, dst_y),
-            area=(src_x, src_y, src_w, src_h)
-        )
+        overscan_surf.blit(map_img, (dst_x, dst_y), area=(src_x, src_y, src_w, src_h))
 
+    # Rotate map based on heading
     updated_cache = pygame.transform.rotate(overscan_surf, heading)
-
     last_heading = heading
 
-    # ---------------- Final crop ----------------
+    # Final crop
     rw, rh = updated_cache.get_size()
-    fx = (rw - WIDTH) // 2
-    fy = (rh - HEIGHT) // 2
-
+    fx, fy = (rw - WIDTH) // 2, (rh - HEIGHT) // 2
+    
     screen.blit(updated_cache, (0, 0), area=(fx, fy, WIDTH, HEIGHT))
 
 # Draw crosshair function
