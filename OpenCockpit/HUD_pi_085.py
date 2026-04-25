@@ -28,7 +28,7 @@ DISPLAY_CONFIG = {
 # Display settings
 WIDTH, HEIGHT = 128, 128
 FPS = 30
-PITCH_MOVE_SCALE = 8 # pixels moved per degree of pitch (horizontal line spacing)
+PITCH_MOVE_SCALE = 10 # pixels moved per degree of pitch (horizontal line spacing)
 ALT_MOVE_SCALE = 2 # pixels moved per altitude (vertical line spacing)
 SPD_MOVE_SCALE = 2 # pixels moved per speed unit (vertical line spacing)
 
