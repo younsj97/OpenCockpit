@@ -32,6 +32,20 @@ After install INAV on FC, set UART1 as MSP 115200 in ports tab, and connect uart
 ---
 
 ## Build hardwares
+### Step 1  : 3D Print
+ 1. Download [CAD files(for Autodesk Inventor)](https://naver.me/xfbx2pdh).
+ 2. Unzip 'Inventor.zip'.
+ 3. Print STL files in 'Print files' folder. (these files are tolerance applied version)
+
+### Step 2  : Order PCB
+ 1. Download gerber files of [Display](https://github.com/younsj97/OpenCockpit/blob/main/HW/PCB/Display/Gerber/Display_gerber.zip), [Main](https://github.com/younsj97/OpenCockpit/blob/main/HW/PCB/Main/Gerber/Main_gerber.zip)
+ 2. Upload ZIP files to PCB maker like JLCPCB and order.
+
+### Step 3  : Order BOM
+ 1. Download [BOM file](https://github.com/younsj97/OpenCockpit/blob/main/HW/BOM_List.xlsx)
+ 2. Check all parts you need and order
+
+### Step 4  : Assemble
 comming soon
 
 ---
