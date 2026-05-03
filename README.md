@@ -12,7 +12,7 @@ Full description will be created after the project is completed
 ### Option 1  : Install preset OS
 _Installable on 16GB microSD_
  1. Download and install [Raspberry Pi imager](https://www.raspberrypi.com/software/)
- 2. Download [OS img file](https://naver.me/5sGocZzT) and extract zip file.
+ 2. Download [OS img file](https://naver.me/xiL5z6Qn) and extract zip file.
  3. Run Raspberry Pi imager, Connect 16GB MicroSD to PC.
  4. Select [No filtering] - [Use Custom] - [OpenCockpit-16GB-yymmdd.img] - [WRITE] in Raspberry Pi imager.
    
