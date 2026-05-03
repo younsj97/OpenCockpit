@@ -33,7 +33,7 @@ After install INAV on FC, set UART1 as MSP 115200 in ports tab, and connect uart
 
 ## Build hardwares
 ### Step 1  : 3D Print
- 1. Download [CAD files(for Autodesk Inventor)](https://naver.me/xfbx2pdh).
+ 1. Download [CAD files(for Autodesk Inventor)](https://naver.me/xwo9NUy8).
  2. Unzip 'Inventor.zip'.
  3. Print STL files in 'Print files' folder. (these files are tolerance applied version)
 
