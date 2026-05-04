@@ -1,56 +1,11 @@
 # OpenCockpit
-FPV cockpit display with Raspberry Pi
-
 ![pic0](./etc/PC-21_cockpit.jpg)
-![pic0](./etc/Prototype2.jpg)
 
-Full description will be created after the project is completed
-
----
-
-## Install Raspberry Pi OS
-### Option 1  : Install preset OS
-_Installable on 16GB microSD_
- 1. Download and install [Raspberry Pi imager](https://www.raspberrypi.com/software/)
- 2. Download [OS img file](https://naver.me/xiL5z6Qn) and extract zip file.
- 3. Run Raspberry Pi imager, Connect 16GB MicroSD to PC.
- 4. Select [No filtering] - [Use Custom] - [OpenCockpit-16GB-yymmdd.img] - [WRITE] in Raspberry Pi imager.
-   
-### Option 2 : Make new OpenCockpit from basic Raspberry Pi OS
-_To use 32GB or another microSD, make new OpenCockpit from basic Raspberry Pi OS_
- 1. Follow guide
-    - [English](https://vudev.notion.site/OpenCockpit-setup-English-2ec6ea6262ea80e7a53cd84920953c4e?source=copy_link)
-    - [한국어](https://vudev.notion.site/OpenCockpit-2ec6ea6262ea81c1a555c2e47eb1c878?source=copy_link)
+OpenCockpit is an open-source FPV cockpit display that uses a Raspberry Pi.
+It consists of working displays such as a HUD, map, and MFD, and it receives data from the flight controller(FC) to show live flight data in real time.
 
 ---
 
-## Set INAV port
-![pic1](./etc/INAV_ports_setup.png)
-
-After install INAV on FC, set UART1 as MSP 115200 in ports tab, and connect uart1 to FC connector on main PCB
-
----
-
-## Build hardwares
-### Step 1  : 3D Print
- 1. Download [CAD files(for Autodesk Inventor)](https://naver.me/xwo9NUy8).
- 2. Unzip 'Inventor.zip'.
- 3. Print STL files in 'Print files' folder. (these files are tolerance applied version)
-
-### Step 2  : Order PCB
- 1. Download gerber files of [Display](https://github.com/younsj97/OpenCockpit/blob/main/HW/PCB/Display/Gerber/Display_gerber.zip), [Main](https://github.com/younsj97/OpenCockpit/blob/main/HW/PCB/Main/Gerber/Main_gerber.zip)
- 2. Upload ZIP files to PCB maker like JLCPCB and order.
-
-### Step 3  : Order BOM
- 1. Download [BOM file](https://github.com/younsj97/OpenCockpit/blob/main/HW/BOM_List.xlsx)
- 2. Check all parts you need and order
-
-### Step 4  : Assemble
-comming soon
-
----
-
-## Modify softwares
-Follow guide  
-   - [English](https://vudev.notion.site/OpenCockpit-software-modification-English-2f06ea6262ea8026906fce5b30fe7526?source=copy_link)  
-   - [한국어](https://vudev.notion.site/OpenCockpit-2f06ea6262ea80a4a526f1b6e6c0bddc?source=copy_link)
+## Full Build Tutuorial
+  - [English](https://vudev.notion.site/OpenCockpit-Build-Tutorial-3566ea6262ea80a49489f02d480d7f26?source=copy_link)
+  - [한국어](https://vudev.notion.site/OpenCockpit-3566ea6262ea80b49948cab48c1eeefa?source=copy_link)
