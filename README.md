@@ -1,8 +1,8 @@
 # OpenCockpit
 ![pic0](./etc/PC-21_cockpit.jpg)
 
-OpenCockpit is an open-source FPV cockpit display that uses a Raspberry Pi.
-It consists of working displays such as a HUD, map, and MFD, and it receives data from the flight controller(FC) to show live flight data in real time.
+OpenCockpit is an open-source FPV cockpit display that uses a Raspberry Pi.  
+It consists of working displays such as a HUD,MAP,MFD,INFO and it receives data from the flight controller(FC) to show live flight data in real time.
 
 ---
 
